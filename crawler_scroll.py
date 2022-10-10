@@ -8,18 +8,15 @@ import time
 
 try:
     print("for start")
-    for i in range(2):
-        print(str(i) + " start")
+    for i in range(100000000):
+        print(str(i+1) + " process")
         button = driver.find_element_by_xpath(f'//*[@id="main-app"]/div[2]/div/div[3]/div[2]/div[2]/div/button') #더보기버튼 xpath
-        time.sleep(0.3)
+        time.sleep(0.01)
         driver.execute_script("arguments[0].click();", button) #click()으로 에러가나서 써줌
-        print(str(i) + " end")
         
 except Exception as e:
     print("except : " + str(e))
-    button = driver.find_element_by_class_name #더보기버튼
-    button.click
-    
+    button = driver.find_element_by_class_name #더보기버튼    
 
 wadiz_title=[]
 wadiz_url=[]
@@ -32,12 +29,9 @@ for index, value in enumerate(rows):
     wadiz_title.append(title.text)
 
     url_class = value.find_element_by_class_name('CardLink_link__1k83H')
-    url1 = url_class.get_attribute('href')
+    url = url_class.get_attribute('href')
     
-    wadiz_url.append(url1.text)
-    time.sleep(0.3)
-    print(index)
-
+    wadiz_url.append(url)
 
 
 import pandas as pd
@@ -46,5 +40,5 @@ df1 = pd.DataFrame({'title' : wadiz_title, 'url' : wadiz_url})
 
 len(df1)
 
-df1.to_csv("wadiz_url.csv",mode='w',encoding='utf-8-sig')
+df1.to_csv("wadiz_title_url.csv",mode='w',encoding='utf-8-sig')
 
