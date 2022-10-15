@@ -15,7 +15,7 @@ from selenium.webdriver.common.by import By
 #table = driver.find_element(By.CLASS_NAME , "ProjectCardList_container__3Y14k") # 상품들을 포함하는 껍데기
 #rows = table.find_element(By.CLASS_NAME, "ProjectCardList_item__1owJa") # 열하나 = 상품 하나
 
-for i in range(1, 3):
+for i in range(1, 30):
     table = driver.find_element(By.CLASS_NAME , "ProjectCardList_container__3Y14k") # 표 전체
     rows = table.find_elements(By.CLASS_NAME , "ProjectCardList_item__1owJa")
     rows = table.find_elements(By.CLASS_NAME , "ProjectCardList_item__1owJa")[i]

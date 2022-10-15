@@ -2,8 +2,12 @@ import multiprocessing
 import pandas as pd
 from pandas import Series,DataFrame
 import numpy as np
+from datetime import datetime
 
-data = pd.read_csv("/Users/shockingjmh/Dev/git/crawler/wadiz_title_url_sample.csv")
+
+start_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+data = pd.read_csv("/Users/shockingjmh/Dev/git/crawler/wadiz_title_url_1.csv")
 data2 = data['url']
 one = data2.values.tolist()
 
@@ -75,4 +79,10 @@ import pandas as pd
 import numpy as np
 
 df1 = pd.DataFrame(data=sum(wadiz_list,[]), columns=['title', 'category', 'url', 'body'])
-df1.to_csv("wadiz_1.csv",mode='w',encoding='utf-8-sig')
+df1.to_csv("wadiz_"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
+
+end_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+print("start time : " + str(start_time))
+print("end time : " + str(end_time))
+
