@@ -9,8 +9,8 @@ end_stage = 8
 #wadiz_title_url.csv   total
 # 1001
 data = pd.read_csv("/Users/shockingjmh/Dev/git/crawler/wadiz_title_url.csv")
-data2 = data.iloc[start_stage:end_stage]['url']
-#data2 = data['url']
+#data2 = data.iloc[start_stage:end_stage]['url']
+data2 = data['url']
 one = data2.values.tolist()
 
 from time import time
@@ -34,11 +34,14 @@ def mul(url) :
     
     step = int(url[url.rindex('_')+1:])
     
-    if (step % 1000) == 0 : 
-        time.sleep(6)
+    if (step % 100) == 0 : 
+        time.sleep(300)
+    elif (step % 50) == 0 : 
+        time.sleep(180)
+    elif (step % 10) == 0 : 
+        time.sleep(60)
     else :
         time.sleep(random.randint(1, 5) * 1)
-    
     
     wadiz_body=""
     wadiz_title=""
@@ -91,7 +94,7 @@ if __name__ == '__main__':
     driver.quit()
     
     df1 = pd.DataFrame(data=sum(wadiz_list,[]), columns=['title', 'category', 'url', 'achievement_rate', 'total_amount', 'total_supporter', 'body'])
-    #df1.to_csv("wadiz_result_"+str(end_stage)+"_"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
-    df1.to_csv("wadiz_result_final_"+str(end_stage)+"_"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
+    df1.to_csv("wadiz_result_final"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
+    #df1.to_csv("wadiz_result_final_"+str(end_stage)+"_"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
 
 
