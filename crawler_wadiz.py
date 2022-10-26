@@ -3,14 +3,14 @@ from pandas import Series,DataFrame
 import numpy as np
 from datetime import datetime
 
-start_stage = 0
-end_stage = 8
+start_stage = 8000
+end_stage = 9000
 
 #wadiz_title_url.csv   total
 # 1001
 data = pd.read_csv("/Users/shockingjmh/Dev/git/crawler/wadiz_title_url.csv")
-#data2 = data.iloc[start_stage:end_stage]['url']
-data2 = data['url']
+data2 = data.iloc[start_stage:end_stage]['url']
+#data2 = data['url']
 one = data2.values.tolist()
 
 from time import time
@@ -32,17 +32,6 @@ from multiprocessing import Pool, pool
 def mul(url) : 
     driver.get(url)
     
-    step = int(url[url.rindex('_')+1:])
-    
-    if (step % 100) == 0 : 
-        time.sleep(300)
-    elif (step % 50) == 0 : 
-        time.sleep(180)
-    elif (step % 10) == 0 : 
-        time.sleep(60)
-    else :
-        time.sleep(random.randint(1, 5) * 1)
-    
     wadiz_body=""
     wadiz_title=""
     wadiz_category=""
@@ -51,29 +40,55 @@ def mul(url) :
     wadiz_total_supporter=""
     wadiz_url=""
 
-    #본문내용
-    body = driver.find_elements_by_xpath(f'//*[@id="introdetails"]/div')
-    for value in body:
-        wadiz_body += value.text
-    
-    #제목
-    title = driver.find_element_by_xpath(f'//*[@id="container"]/div[3]/h2/a')
-    wadiz_title = title.text
-    
-    #카테고리
-    category = driver.find_element_by_xpath(f'//*[@id="container"]/div[3]/p')
-    wadiz_category = category.text
-    
-    achievement_rate = driver.find_element_by_xpath(f'//*[@id="container"]/div[6]/div/div[1]/div[1]/div[1]/div[1]/p[3]')
-    wadiz_achievement_rate = achievement_rate.text
-    
-    total_amount = driver.find_element_by_xpath(f'//*[@id="container"]/div[6]/div/div[1]/div[1]/div[1]/div[1]/p[4]')
-    wadiz_total_amount = total_amount.text
-    
-    total_supporter = driver.find_element_by_xpath(f'//*[@id="container"]/div[6]/div/div[1]/div[1]/div[1]/div[1]/p[5]')
-    wadiz_total_supporter = total_supporter.text
-    
-    wadiz_url = driver.current_url
+    try:
+        #본문내용
+        body = driver.find_elements_by_xpath(f'//*[@id="introdetails"]/div')
+        for value in body:
+            wadiz_body += value.text
+        
+        #제목
+        title = driver.find_element_by_xpath(f'//*[@id="container"]/div[3]/h2/a')
+        wadiz_title = title.text
+        
+        #카테고리
+        category = driver.find_element_by_xpath(f'//*[@id="container"]/div[3]/p')
+        wadiz_category = category.text
+        
+    #    achievement_rate = driver.find_element_by_xpath(f'//*[@id="container"]/div[6]/div/div[1]/div[1]/div[1]/div[1]/p[3]')
+    #    wadiz_achievement_rate = achievement_rate.text
+        
+    #    total_amount = driver.find_element_by_xpath(f'//*[@id="container"]/div[6]/div/div[1]/div[1]/div[1]/div[1]/p[4]')
+    #    wadiz_total_amount = total_amount.text
+        
+    #    total_supporter = driver.find_element_by_xpath(f'//*[@id="container"]/div[6]/div/div[1]/div[1]/div[1]/div[1]/p[5]')
+    #    wadiz_total_supporter = total_supporter.text
+
+        achievement_rate = driver.find_element_by_class_name("achievement-rate")
+        wadiz_achievement_rate = achievement_rate.text
+        
+        total_amount = driver.find_element_by_class_name("total-amount")
+        wadiz_total_amount = total_amount.text
+        
+        total_supporter = driver.find_element_by_class_name("total-supporter")
+        wadiz_total_supporter = total_supporter.text
+        
+        wadiz_url = url
+        
+        step = int(url[url.rindex('_')+1:])
+        
+        if (step % 100) == 0 : 
+            time.sleep(600)
+        elif (step % 50) == 0 : 
+            time.sleep(300)
+        elif (step % 10) == 0 : 
+            time.sleep(60)
+        elif (step % 5) == 0 : 
+            time.sleep(30)            
+        else :
+            time.sleep(random.randint(1, 5) * 2)
+        
+    except:
+        print("exception! : " + wadiz_url)
     
     return [str(wadiz_title), str(wadiz_category), str(wadiz_url), str(wadiz_achievement_rate), str(wadiz_total_amount), str(wadiz_total_supporter), str(wadiz_body)]
 
@@ -94,7 +109,8 @@ if __name__ == '__main__':
     driver.quit()
     
     df1 = pd.DataFrame(data=sum(wadiz_list,[]), columns=['title', 'category', 'url', 'achievement_rate', 'total_amount', 'total_supporter', 'body'])
-    df1.to_csv("wadiz_result_final"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
+    #df1.to_csv("wadiz_result_final"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
+    df1.to_csv("wadiz_result_final_"+str(start_stage)+"_"+str(end_stage)+"_"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
     #df1.to_csv("wadiz_result_final_"+str(end_stage)+"_"+str(datetime.now().strftime('%Y%m%d%H%M%S'))+".csv",mode='w',encoding='utf-8-sig')
 
 
